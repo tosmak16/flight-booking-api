@@ -11,19 +11,25 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+import dotenv
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# load the .env file
+dotenv.load()
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '5*%o2$q8=(_4h6gk0(4^-bq3$*xlr*hi5#7t*o&e1tw&!1_f28'
+SECRET_KEY = dotenv.get('APP_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = dotenv.get('DEBUG')
+
 
 ALLOWED_HOSTS = []
 
@@ -69,18 +75,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'flight_booking.config.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'flight_db',
-        'USER': 'tosmak',
-        'PASSWORD': 'null',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'NAME': dotenv.get('DB_NAME'),
+        'USER': dotenv.get('DB_USER'),
+        'PASSWORD': dotenv.get('DB_PASSWORD'),
+        'PORT': dotenv.get('DB_PORT'),
+        'HOST': dotenv.get('DB_HOST'),
     }
 }
 
