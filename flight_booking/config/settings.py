@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'tke9l(vbf57&s04y^m)!%j&!+t)cv1ro*iq5-c!+k&y#9baswt'
+SECRET_KEY = '5*%o2$q8=(_4h6gk0(4^-bq3$*xlr*hi5#7t*o&e1tw&!1_f28'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -49,7 +49,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'flight_booking.urls'
+ROOT_URLCONF = 'flight_booking.config.urls'
 
 TEMPLATES = [
     {
@@ -67,7 +67,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'flight_booking.wsgi.application'
+WSGI_APPLICATION = 'flight_booking.config.wsgi.application'
 
 
 # Database
