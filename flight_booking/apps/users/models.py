@@ -35,6 +35,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(default=timezone.now)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    passport_url = models.CharField(max_length=100, blank=True, default='')
 
     objects = UserManager()
 
