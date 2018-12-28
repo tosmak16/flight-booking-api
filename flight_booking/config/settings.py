@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'flight_booking.apps.bookings',
     'flight_booking.apps.users',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -131,3 +132,15 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'users.User'
+
+AWS_ACCESS_KEY_ID = dotenv.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = dotenv.get('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = dotenv.get('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+MEDIA_URL = "https://%s/" % AWS_S3_CUSTOM_DOMAIN
+
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+
+DEFAULT_FILE_STORAGE = 'flight_booking.config.storage_backends.MediaStorage'
