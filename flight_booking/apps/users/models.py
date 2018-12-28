@@ -4,7 +4,6 @@ from django.contrib.auth.models import (AbstractBaseUser, PermissionsMixin,
 from django.contrib.auth.hashers import make_password
 from django.utils import timezone
 
-
 class UserManager(BaseUserManager):
 
     def create_user(self, email, password=None):
@@ -35,7 +34,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(default=timezone.now)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    passport_url = models.CharField(max_length=100, blank=True, default='')
+    passport_url = models.FileField(default='')
 
     objects = UserManager()
 
