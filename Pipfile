@@ -16,6 +16,8 @@ psycopg2-binary = "*"
 python-env = "*"
 markdown = "*"
 django-filter = "*"
+django-storages = "*"
+boto3 = "*"
 
 [requires]
 python_version = "3.7"
