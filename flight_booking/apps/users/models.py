@@ -4,6 +4,7 @@ from django.contrib.auth.models import (AbstractBaseUser, PermissionsMixin,
 from django.contrib.auth.hashers import make_password
 from django.utils import timezone
 
+
 class UserManager(BaseUserManager):
 
     def create_user(self, email, password=None):
@@ -27,6 +28,8 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     '''Custom User model'''
+
+    """Custom User model"""
 
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=100)
