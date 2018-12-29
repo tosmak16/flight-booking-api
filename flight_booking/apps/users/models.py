@@ -6,7 +6,7 @@ from django.utils import timezone
 
 
 class UserManager(BaseUserManager):
-
+    
     def create_user(self, email, password=None):
 
         if email is None:
@@ -27,7 +27,6 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    '''Custom User model'''
 
     """Custom User model"""
 
