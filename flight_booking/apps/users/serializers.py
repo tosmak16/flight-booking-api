@@ -31,7 +31,7 @@ class UserSerializer(serializers.ModelSerializer):
         raise serializers.ValidationError(
             'Password value should have at least 2 uppercase, 2 lowercase, 2 digit and 2 special character.'
         )
-
+        
     @staticmethod
     def validate_email(email):
         """

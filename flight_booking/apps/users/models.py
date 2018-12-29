@@ -27,6 +27,7 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    '''Custom User model'''
 
     """Custom User model"""
 
