@@ -1,8 +1,11 @@
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import exceptions
+
 
 from .models import User
 from .serializers import UserSerializer
+from .auth import VerifyToken
 
 
 def handle_validate_and_update_user(request, validated_user_data, id=None):
@@ -26,3 +29,12 @@ def handle_validate_and_update_user(request, validated_user_data, id=None):
         user = UserSerializer(user).data
         return Response({'message': 'Details updated successfully', 'data': user}, status=status.HTTP_200_OK)
     return Response({'message': validated_user_data.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+
+def handle_admin_user_check(request):
+    authenticated_user, none_value = VerifyToken().authenticate(request)
+    if authenticated_user.is_superuser:
+        return True
+    elif not authenticated_user or not str(authenticated_user.id) in request.path:
+        raise exceptions.AuthenticationFailed('Sorry, you do not have the permission')
+    return True
