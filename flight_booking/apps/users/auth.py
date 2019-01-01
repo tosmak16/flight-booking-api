@@ -7,6 +7,8 @@ from rest_framework import authentication, exceptions
 class VerifyToken(authentication.BaseAuthentication):
     def authenticate(self, request):
         token = request.META.get('HTTP_TOKEN') or request.META.get('token')
+        if token is None:
+            raise exceptions.AuthenticationFailed('Token is required')
         key = os.getenv('APP_SECRET_KEY')
         email = None
         try:
