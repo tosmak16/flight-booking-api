@@ -1,7 +1,7 @@
 import jwt
 import os
 
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
@@ -9,17 +9,22 @@ from datetime import datetime
 
 from .serializers import UserSerializer
 from .models import User
-from .permissions import IsAdmin, IsOwner, PatchAdminAndUserPermissions
+from .permissions import PatchAdminAndUserPermissions, PutAdminAndUserPermissions, GetAdminAndUserPermissions
 from ...config.settings import TOKEN_EXP
+from .helpers import handle_validate_and_update_user
 
 
-class UserDetailViewSet(viewsets.GenericViewSet):
-    
+class UserDetailViewSet(viewsets.GenericViewSet,
+                        mixins.RetrieveModelMixin,
+                        mixins.UpdateModelMixin):
     """ It handles user operations like sign up, sign in, update, retrieve """
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (IsOwner, PatchAdminAndUserPermissions, )
+    permission_classes = (PatchAdminAndUserPermissions,
+                          GetAdminAndUserPermissions,
+                          PutAdminAndUserPermissions,
+                          )
     lookup_field = 'id'
 
     @action(methods=['POST'], detail=False)
@@ -76,3 +81,28 @@ class UserDetailViewSet(viewsets.GenericViewSet):
             return Response({'message': 'Passport Updated successfully'}, status=status.HTTP_200_OK)
         user.save()
         return Response({'message': 'Passport deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
+    def update(self, request, id=None, *args, **kwargs):
+        """It updates user details
+
+        :param request: contains request data
+        :param id: user id
+        :param args:
+        :param kwargs
+        :return: response message or data
+        """
+        validated_user_data = UserSerializer(data=request.data)
+        return handle_validate_and_update_user(request, validated_user_data, id)
+
+    def partial_update(self, request, id=None, *args, **kwargs):
+        """It partially updates user details
+
+        :param request: contains request data
+        :param id: user id
+        :param args:
+        :param kwargs
+        :return: response message or data
+        """
+        validated_user_data = UserSerializer(data=request.data, partial=True)
+        return handle_validate_and_update_user(request, validated_user_data, id)
+
