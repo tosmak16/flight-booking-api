@@ -25,7 +25,7 @@ class GetAdminPermissions(permissions.BasePermission):
     def has_permission(self, request, view):
         # It only allow GET requests for Admin.
         if request.method == "GET":
-            authenticated_user = VerifyToken().authenticate(request)
+            authenticated_user, none_value = VerifyToken().authenticate(request)
             if authenticated_user is None or not authenticated_user.is_superuser:
                 raise exceptions.AuthenticationFailed('Sorry, you do not have the permission'
                                                       ' level to perform this action')
@@ -41,7 +41,7 @@ class GetAdminAndUserPermissions(permissions.BasePermission):
     def has_permission(self, request, view):
         # It only allow GET requests for owners of an object and Admin.
         if request.method == "GET":
-            authenticated_user = VerifyToken().authenticate(request)
+            authenticated_user, none_value = VerifyToken().authenticate(request)
             if authenticated_user.is_superuser:
                 return True
             elif not authenticated_user or not str(authenticated_user.id) in request.path:
@@ -67,7 +67,7 @@ class IsAdmin(permissions.BasePermission):
 
     def has_permission(self, request, view):
         # It only allow GET requests for Admin.
-        authenticated_user = VerifyToken().authenticate(request)
+        authenticated_user, none_value = VerifyToken().authenticate(request)
         if authenticated_user.is_superuser:
             raise exceptions.AuthenticationFailed('Sorry, you do not have the permission'
                                                   ' level to perform this action')
@@ -75,9 +75,26 @@ class IsAdmin(permissions.BasePermission):
 
 
 class PatchAdminAndUserPermissions(permissions.BasePermission):
-
+    """
+    Custom permission to only allow owners of an object and Admin to partially update resource.
+    """
     def has_permission(self, request, view):
         if request.method == "PATCH":
+            authenticated_user, none_value = VerifyToken().authenticate(request)
+            if authenticated_user.is_superuser:
+                return True
+            elif not authenticated_user or not str(authenticated_user.id) in request.path:
+                raise exceptions.AuthenticationFailed('Sorry, you do not have the permission'
+                                                      ' level to perform this action')
+        return True
+
+
+class PutAdminAndUserPermissions(permissions.BasePermission):
+    """
+    Custom permission to only allow owners of an object and Admin to update resource.
+    """
+    def has_permission(self, request, view):
+        if request.method == "PUT":
             authenticated_user, none_value = VerifyToken().authenticate(request)
             if authenticated_user.is_superuser:
                 return True
