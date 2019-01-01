@@ -10,12 +10,12 @@ class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         write_only=True,
         min_length=9,
-        required=True
+        required=True,
     )
 
     class Meta:
         model = get_user_model()
-        fields = ('id', 'first_name', 'last_name', 'email', 'password', 'phone_number', 'passport_url')  
+        fields = ('id', 'first_name', 'last_name', 'email', 'password', 'phone_number', 'passport_url')
 
     @staticmethod
     def validate_password(password):
@@ -44,4 +44,4 @@ class UserSerializer(serializers.ModelSerializer):
             return email
         raise serializers.ValidationError(
             'Enter a valid email address.'
-        )         
+        )
