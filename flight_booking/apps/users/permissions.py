@@ -1,20 +1,7 @@
 from rest_framework import permissions, exceptions
 
 from .auth import VerifyToken
-
-
-class PostPermission(permissions.BasePermission):
-    """
-    Custom permission to only authenticated user post a request.
-    """
-
-    def has_permission(self, request, view):
-        # It only allow Post requests for authenticated users.
-        if request.method == "POST":
-            if VerifyToken().authenticate(request):
-                return True
-            return False
-        return True
+from .helpers import handle_admin_user_check
 
 
 class GetAdminPermissions(permissions.BasePermission):
@@ -25,11 +12,7 @@ class GetAdminPermissions(permissions.BasePermission):
     def has_permission(self, request, view):
         # It only allow GET requests for Admin.
         if request.method == "GET":
-            authenticated_user, none_value = VerifyToken().authenticate(request)
-            if authenticated_user is None or not authenticated_user.is_superuser:
-                raise exceptions.AuthenticationFailed('Sorry, you do not have the permission'
-                                                      ' level to perform this action')
-            return True
+            IsAdmin().has_permission(request, view)
         return True
 
 
@@ -41,12 +24,7 @@ class GetAdminAndUserPermissions(permissions.BasePermission):
     def has_permission(self, request, view):
         # It only allow GET requests for owners of an object and Admin.
         if request.method == "GET":
-            authenticated_user, none_value = VerifyToken().authenticate(request)
-            if authenticated_user.is_superuser:
-                return True
-            elif not authenticated_user or not str(authenticated_user.id) in request.path:
-                raise exceptions.AuthenticationFailed('Sorry, you do not have the permission'
-                                                      ' level to perform this action')
+            return handle_admin_user_check(request)
         return True
 
 
@@ -66,7 +44,6 @@ class IsAdmin(permissions.BasePermission):
     """
 
     def has_permission(self, request, view):
-        # It only allow GET requests for Admin.
         authenticated_user, none_value = VerifyToken().authenticate(request)
         if authenticated_user.is_superuser:
             raise exceptions.AuthenticationFailed('Sorry, you do not have the permission'
@@ -80,12 +57,7 @@ class PatchAdminAndUserPermissions(permissions.BasePermission):
     """
     def has_permission(self, request, view):
         if request.method == "PATCH":
-            authenticated_user, none_value = VerifyToken().authenticate(request)
-            if authenticated_user.is_superuser:
-                return True
-            elif not authenticated_user or not str(authenticated_user.id) in request.path:
-                raise exceptions.AuthenticationFailed('Sorry, you do not have the permission'
-                                                      ' level to perform this action')
+            return handle_admin_user_check(request)
         return True
 
 
@@ -95,10 +67,5 @@ class PutAdminAndUserPermissions(permissions.BasePermission):
     """
     def has_permission(self, request, view):
         if request.method == "PUT":
-            authenticated_user, none_value = VerifyToken().authenticate(request)
-            if authenticated_user.is_superuser:
-                return True
-            elif not authenticated_user or not str(authenticated_user.id) in request.path:
-                raise exceptions.AuthenticationFailed('Sorry, you do not have the permission'
-                                                      ' level to perform this action')
+            return handle_admin_user_check(request)
         return True
