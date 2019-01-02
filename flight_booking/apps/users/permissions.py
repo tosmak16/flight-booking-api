@@ -45,7 +45,7 @@ class IsAdmin(permissions.BasePermission):
 
     def has_permission(self, request, view):
         authenticated_user, none_value = VerifyToken().authenticate(request)
-        if authenticated_user.is_superuser:
+        if not authenticated_user.is_superuser:
             raise exceptions.AuthenticationFailed('Sorry, you do not have the permission'
                                                   ' level to perform this action')
         return True
