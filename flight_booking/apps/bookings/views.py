@@ -14,4 +14,9 @@ class BookingsViewSet(mixins.ListModelMixin, viewsets.GenericViewSet, mixins.Cre
     permission_classes = (GetAdminPermissions,)
 
 
-
+class BookingsDetailsViewSet(viewsets.GenericViewSet, mixins.UpdateModelMixin, mixins.RetrieveModelMixin):
+    """ It handles flight bookings operations like getting and updating a booked flight"""
+    queryset = Booking.objects.all()
+    serializer_class = BookingSerializer
+    authentication_classes = (VerifyToken,)
+    permission_classes = (IsOwner,)
