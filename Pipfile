@@ -19,6 +19,8 @@ django-filter = "*"
 django-storages = "*"
 boto3 = "*"
 djangorestframework-jwt = "*"
+django-crontab = "*"
+django-smtp-ssl = "*"
 
 [requires]
 python_version = "3.7"
