@@ -13,9 +13,9 @@ def send_flight_reminder_mail():
         return bookings
     for booking in bookings:
         mass_email_list += [booking.owner.email]
-    msg=EmailMessage(
+    messenger = EmailMessage(
         f"Flight reminder",
         'Hello, this is a reminder that your flight is scheduled for ' + str(tomorrow),
         DEFAULT_FROM_EMAIL,
         to=mass_email_list)
-    msg.send()
+    messenger.send()
