@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'flight_booking.apps.bookings',
     'flight_booking.apps.users',
     'storages',
+    'django_crontab',
 ]
 
 MIDDLEWARE = [
@@ -113,6 +114,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+CRONJOBS = [
+    ('0 0 * * *', 'flight_booking.apps.bookings.cron_job.send_flight_reminder_mail')
+]
+
+CRONTAB_COMMAND_SUFFIX = '2>&1'
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
@@ -149,3 +156,4 @@ AWS_S3_OBJECT_PARAMETERS = {
 DEFAULT_FILE_STORAGE = 'flight_booking.config.custom_s3_storage.MediaStorage'
 
 TOKEN_EXP = timedelta(minutes=dotenv.get('TOKEN_EXP_MIN', default=30))
+
