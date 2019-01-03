@@ -157,3 +157,10 @@ DEFAULT_FILE_STORAGE = 'flight_booking.config.custom_s3_storage.MediaStorage'
 
 TOKEN_EXP = timedelta(minutes=dotenv.get('TOKEN_EXP_MIN', default=30))
 
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = dotenv.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = dotenv.get('EMAIL_HOST_PASSWORD')
+EMAIL_USE_SSL = True
+EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
