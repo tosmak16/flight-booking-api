@@ -59,8 +59,12 @@ jobs:
               docker login --username=$HEROKU_LOGIN --password=$HEROKU_API_KEY registry.heroku.com
               docker tag tosmak16/flight-booking-api:latest registry.heroku.com/$HEROKU_APP_NAME/web
               docker push registry.heroku.com/$HEROKU_APP_NAME/web:latest
-              git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git master
-
+              docker inspect registry.heroku.com/$HEROKU_APP_NAME/web --format={{.Id}} > APP_DOCKER_IMAGE_ID_FILE
+              export APP_DOCKER_IMAGE_ID=$(cat APP_DOCKER_IMAGE_ID_FILE)
+              curl -n -X PATCH https://api.heroku.com/apps/$HEROKU_APP_NAME/formation \
+              -d "{ \"updates\": [ { \"type\": \"web\", \"docker_image\": \"${APP_DOCKER_IMAGE_ID}\" }]}" -H "Content-Type: application/json" \
+              -H "Accept: application/vnd.heroku+json; version=3.docker-releases" \
+              -H "Authorization: Bearer $HEROKU_API_KEY"
 
 workflows:
   version: 2
