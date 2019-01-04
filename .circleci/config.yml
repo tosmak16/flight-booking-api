@@ -59,6 +59,8 @@ jobs:
               docker login --username=$HEROKU_LOGIN --password=$HEROKU_API_KEY registry.heroku.com
               docker tag tosmak16/flight-booking-api:latest registry.heroku.com/$HEROKU_APP_NAME/web
               docker push registry.heroku.com/$HEROKU_APP_NAME/web:latest
+              git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git $BRANCH-NAME
+
 
 workflows:
   version: 2
