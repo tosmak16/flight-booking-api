@@ -10,7 +10,7 @@ WORKDIR /usr/src/app
 COPY . /usr/src/app
 
 # install pipenv
-RUN sudo pip install pipenv
+RUN pip install pipenv
 
 # install dependencies
 RUN pipenv install
