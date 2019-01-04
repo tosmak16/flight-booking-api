@@ -13,7 +13,7 @@ COPY . /usr/src/app
 RUN pip install pipenv
 
 # install dependencies
-RUN pipenv install
+RUN pipenv install --system
 
 EXPOSE 5000
 
