@@ -30,14 +30,13 @@ dotenv.load()
 SECRET_KEY = dotenv.get('APP_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = dotenv.get('DEBUG')
+DEBUG = dotenv.get('DEBUG') or False
 
 
 ALLOWED_HOSTS = [
-    'flight-booking-ap.herokuapp.com/'
+    os.getenv('HOST_URL'),
     '127.0.0.1',
-    'localhost',
-    '[::1]',
+    '0.0.0.0'
 ]
 
 # Application definition
