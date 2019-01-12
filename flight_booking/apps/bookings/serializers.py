@@ -45,7 +45,4 @@ class BookingSerializer(serializers.ModelSerializer):
         flight_type = str(flight_type).upper()
         if flight_type not in ('ONE', 'ROUND'):
             raise serializers.ValidationError('flight_type can only be ONE or ROUND')
-        return  flight_type
-
-
-
+        return flight_type
