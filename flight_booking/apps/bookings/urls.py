@@ -8,7 +8,7 @@ router = DefaultRouter()
 router.register(r'bookings', views.BookingsViewSet)
 router.register(r'bookings', views.BookingsDetailsViewSet)
 
-
 urlpatterns = [
     url(r'^', include(router.urls)),
+    url(r'^bookings/users', views.users),
 ]
