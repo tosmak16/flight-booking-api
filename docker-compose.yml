@@ -1,17 +1,6 @@
 version: '3.2'
 
 services:
-  flight_db:
-    image: postgres:10.1-alpine
-    ports:
-      - 5435:5432
-    environment:
-      - POSTGRES_USER=${DB_PASSWORD}
-      - POSTGRES_PASSWORD=${DB_USER}
-      - POSTGRES_DB=${DB_NAME}
-    restart: always
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
   flight_api:
     build: .
     command: gunicorn flight_booking.config.wsgi --bind 0.0.0.0:8000
@@ -32,6 +21,3 @@ services:
       - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
     ports:
       - 8000:8000
-
-volumes:
-  postgres_data:
