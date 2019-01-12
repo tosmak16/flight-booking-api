@@ -1,7 +1,7 @@
 version: '3.2'
 
 services:
-  database:
+  flight_db:
     image: postgres:10.1-alpine
     ports:
       - 5435:5432
@@ -33,7 +33,7 @@ services:
     ports:
       - 8000:8000
     depends_on:
-      - ${DB_HOST}
+      - flight_db
 
 volumes:
   postgres_data:
