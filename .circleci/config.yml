@@ -50,8 +50,8 @@ jobs:
           name: deploy to heroku
           command: |
               docker login --username=$HEROKU_LOGIN --password=$HEROKU_API_KEY registry.heroku.com
-              docker-compose --project-name flight-booking-api build flight_api
-              docker tag flight-booking-api_flight_api:latest registry.heroku.com/$HEROKU_APP_NAME/web:latest
+              docker-compose --project-name tosmak build flight_api
+              docker tag tosmak_flight_api:latest registry.heroku.com/$HEROKU_APP_NAME/web:latest
               docker push registry.heroku.com/$HEROKU_APP_NAME/web:latest
               docker inspect registry.heroku.com/$HEROKU_APP_NAME/web --format={{.Id}} > APP_DOCKER_IMAGE_ID_FILE
               export APP_DOCKER_IMAGE_ID=$(cat APP_DOCKER_IMAGE_ID_FILE)
