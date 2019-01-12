@@ -1,0 +1,39 @@
+version: '3.7'
+
+services:
+  database:
+    image: postgres:10.1-alpine
+    ports:
+      - 5435:5432
+    environment:
+      - POSTGRES_USER=${DB_PASSWORD}
+      - POSTGRES_PASSWORD=${DB_USER}
+      - POSTGRES_DB=${DB_NAME}
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+  web:
+    build: .
+    command: gunicorn flight_booking.config.wsgi --bind 0.0.0.0:8000
+
+    environment:
+      - DEBUG=${DEBUG}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_PORT=${DB_PORT}
+      - DB_HOST=${DB_HOST}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_STORAGE_BUCKET_NAME=${AWS_STORAGE_BUCKET_NAME}
+      - APP_SECRET_KEY=${APP_SECRET_KEY}
+      - TOKEN_EXP_MIN=${TOKEN_EXP_MIN}
+      - EMAIL_HOST_USER=${EMAIL_HOST_USER}
+      - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
+    ports:
+      - 8000:8000
+    depends_on:
+      - database
+
+volumes:
+  postgres_data:
