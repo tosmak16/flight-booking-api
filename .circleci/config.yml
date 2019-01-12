@@ -46,18 +46,12 @@ jobs:
     machine: true
     steps:
       - checkout
-      - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
-      # build the application image
-      - run: docker-compose --project-name tosmak16/flight-booking-api build
-
-      # deploy the image
-      - run: docker push tosmak16/flight-booking-api:latest
-
       - run:
           name: deploy to heroku
           command: |
               docker login --username=$HEROKU_LOGIN --password=$HEROKU_API_KEY registry.heroku.com
-              docker tag tosmak16/flight-booking-api:latest registry.heroku.com/$HEROKU_APP_NAME/web
+              docker-compose --project-name flight-booking-api build flight_api
+              docker tag flight-booking-api_flight_api:latest registry.heroku.com/$HEROKU_APP_NAME/web:latest
               docker push registry.heroku.com/$HEROKU_APP_NAME/web:latest
               docker inspect registry.heroku.com/$HEROKU_APP_NAME/web --format={{.Id}} > APP_DOCKER_IMAGE_ID_FILE
               export APP_DOCKER_IMAGE_ID=$(cat APP_DOCKER_IMAGE_ID_FILE)
