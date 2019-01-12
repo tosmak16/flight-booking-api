@@ -13,7 +13,8 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
   web:
-    build: .
+    build:
+      context: ./docker
     command: gunicorn flight_booking.config.wsgi --bind 0.0.0.0:8000
 
     environment:

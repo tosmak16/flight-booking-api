@@ -11,7 +11,7 @@ WORKDIR /usr/src/app
 RUN apt-get update && apt-get install -y netcat
 
 # add app
-COPY . /usr/src/app
+COPY .. /usr/src/app
 
 # install pipenv
 RUN pip install pipenv
@@ -22,7 +22,7 @@ RUN pipenv install --system --skip-lock
 EXPOSE 8000
 
 # copy entrypoint.sh
-COPY ./entrypoint.sh /usr/src/app/entrypoint.sh
+COPY ../entrypoint.sh /usr/src/app/entrypoint.sh
 
 RUN ["chmod", "+x", "/usr/src/app/entrypoint.sh"]
 
