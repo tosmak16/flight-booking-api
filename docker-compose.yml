@@ -33,7 +33,7 @@ services:
     ports:
       - 8000:8000
     depends_on:
-      - database
+      - ${DB_HOST}
 
 volumes:
   postgres_data:
