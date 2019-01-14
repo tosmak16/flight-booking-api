@@ -29,4 +29,6 @@ django-override-storage = "*"
 python_version = "3.7"
 
 [scripts]
-test = "python manage.py test"
+test = "coverage run manage.py test flight_booking/apps/users/tests/ flight_booking/apps/bookings/tests/"
+report = "coverage report"
+coveralls = "coveralls"
