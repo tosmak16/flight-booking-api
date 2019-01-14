@@ -1,3 +1,3 @@
-[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
+[![Coverage Status](https://coveralls.io/repos/github/tosmak16/flight-booking-api/badge.svg?branch=develop)](https://coveralls.io/github/tosmak16/flight-booking-api?branch=develop) [![CircleCI](https://circleci.com/gh/tosmak16/flight-booking-api.svg?style=svg)](https://circleci.com/gh/tosmak16/flight-booking-api) [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 # flight-booking-api
 A flight booking API that enables a user to log in, upload passport photographs, book tickets, receive tickets as an email, check the status of their flight and make flight reservations purchase tickets
