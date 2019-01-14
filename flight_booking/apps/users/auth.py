@@ -8,7 +8,7 @@ class VerifyToken(authentication.BaseAuthentication):
     def authenticate(self, request):
         token = request.META.get('HTTP_TOKEN') or request.META.get('token')
         if token is None:
-            raise exceptions.AuthenticationFailed('Token is required')
+            raise exceptions.AuthenticationFailed('Token is required.')
         key = os.getenv('APP_SECRET_KEY')
         email = None
         try:
@@ -18,7 +18,7 @@ class VerifyToken(authentication.BaseAuthentication):
 
             }).get('email')
         except jwt.ExpiredSignatureError:
-            raise exceptions.AuthenticationFailed('Token has expired')
+            raise exceptions.AuthenticationFailed('Token has expired.')
         except jwt.InvalidAlgorithmError as error:
             if str(error):
                 raise exceptions.AuthenticationFailed('User Authorization failed. Enter a valid token.')
@@ -33,6 +33,6 @@ class VerifyToken(authentication.BaseAuthentication):
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
-            raise exceptions.AuthenticationFailed('No such user')
+            raise exceptions.AuthenticationFailed('No such user.')
         return user, None
 
