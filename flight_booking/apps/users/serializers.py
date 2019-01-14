@@ -31,17 +31,26 @@ class UserSerializer(serializers.ModelSerializer):
         raise serializers.ValidationError(
             'Password value should have at least 2 uppercase, 2 lowercase, 2 digit and 2 special character.'
         )
-        
-    @staticmethod
-    def validate_email(email):
+
+    def validate_email(self, email):
         """
         Validates email
         :param email:
         :return: email
         """
+        if self.context.get('exclude_email', False):
+            return email
+
         if re.search(r'(^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]'
                      r'{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$)', email) is not None:
             return email
         raise serializers.ValidationError(
             'Enter a valid email address.'
         )
+
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = get_user_model()
+        fields = ('id', 'first_name', 'last_name', 'phone_number', 'passport_url')
