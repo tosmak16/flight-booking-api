@@ -30,7 +30,7 @@ class BookingSerializer(serializers.ModelSerializer):
         returning_date = data.get('returning_date')
 
         if flight_type.upper() == 'ROUND' and returning_date is None:
-            raise serializers.ValidationError('returning_date is required')
+            raise serializers.ValidationError('returning_date is required.')
         if flight_type.upper() == 'ONE' and returning_date:
             data['returning_date'] = None
         return data
@@ -44,5 +44,23 @@ class BookingSerializer(serializers.ModelSerializer):
         """
         flight_type = str(flight_type).upper()
         if flight_type not in ('ONE', 'ROUND'):
-            raise serializers.ValidationError('flight_type can only be ONE or ROUND')
+            raise serializers.ValidationError('flight_type can only be ONE or ROUND.')
         return flight_type
+
+
+class BookingUpdateSerializer(BookingSerializer):
+    """
+    BookingSerializer
+    """
+    departing_date = serializers.DateField(
+        required=True,
+        allow_null=False
+    ),
+
+    flight_type = serializers.CharField(
+        required=True,
+    )
+
+    class Meta:
+        model = Booking
+        fields = ('id', 'flight_from', 'flight_to', 'departing_date', 'returning_date', 'flight_type',)
