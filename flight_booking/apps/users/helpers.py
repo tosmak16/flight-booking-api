@@ -1,7 +1,9 @@
+import jwt
+import os
+
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import exceptions
-
 
 from .models import User
 from .serializers import UserSerializer
@@ -27,7 +29,7 @@ def handle_validate_and_update_user(request, validated_user_data, id=None):
         user.last_name = request.data.get('last_name') if request.data.get('last_name') else user.last_name
         user.save()
         user = UserSerializer(user).data
-        return Response({'message': 'Details updated successfully', 'data': user}, status=status.HTTP_200_OK)
+        return Response({'message': 'Details updated successfully.', 'data': user}, status=status.HTTP_200_OK)
     return Response({'message': validated_user_data.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -38,3 +40,16 @@ def handle_admin_user_check(request):
     elif not authenticated_user or not str(authenticated_user.id) in request.path:
         raise exceptions.AuthenticationFailed('Sorry, you do not have the permission')
     return True
+
+
+def generate_token(email, token_expire_date):
+    """
+    It generates user token
+    :param email: user email
+    :param token_expire_date: time taken for token to expire
+    :return: token
+    """
+    token = jwt.encode({'email': email,
+                        'exp': token_expire_date},
+                       os.getenv('APP_SECRET_KEY'), algorithm='HS256')
+    return token
