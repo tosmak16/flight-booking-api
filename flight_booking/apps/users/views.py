@@ -1,17 +1,14 @@
-import jwt
-import os
-
 from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
 from datetime import datetime
 
-from .serializers import UserSerializer
+from .serializers import UserSerializer, UserUpdateSerializer
 from .models import User
 from .permissions import PatchAdminAndUserPermissions, PutAdminAndUserPermissions, GetAdminAndUserPermissions
 from ...config.settings import TOKEN_EXP
-from .helpers import handle_validate_and_update_user
+from .helpers import handle_validate_and_update_user, generate_token
 
 
 class UserDetailViewSet(viewsets.GenericViewSet,
@@ -54,33 +51,32 @@ class UserDetailViewSet(viewsets.GenericViewSet,
         email = request.data.get('email')
         password = request.data.get('password')
         if not email:
-            return Response({'message': 'email is required'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': 'email is required.'}, status=status.HTTP_400_BAD_REQUEST)
 
         if not password:
-            return Response({'message': 'password is required'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': 'password is required.'}, status=status.HTTP_400_BAD_REQUEST)
 
         user = authenticate(email=email, password=password)
         if user is None:
-            return Response({'message': 'email and password is incorrect'}, status=status.HTTP_401_UNAUTHORIZED)
-        token = jwt.encode({'email': user.email,
-                            'exp': datetime.utcnow() + TOKEN_EXP},
-                           os.getenv('APP_SECRET_KEY'), algorithm='HS256')
+            return Response({'message': 'email or password is incorrect'}, status=status.HTTP_401_UNAUTHORIZED)
+        token_exp_date = datetime.now() + TOKEN_EXP
+        token = generate_token(user.email, token_exp_date)
         return Response({'message': 'you have logged in successfully', 'token': token}, status=status_type)
 
     @action(methods=['PATCH', 'DELETE'], detail=True)
     def passport(self, request, id):
         passport = request.data.get('passport')
-        if passport is None or len(str(passport).strip()) is 0 and request.method is "PATCH":
-            return Response({'message': 'passport field is required'}, status=status.HTTP_400_BAD_REQUEST)
+        if passport is None or len(str(passport).strip()) is 0 and request.method == "PATCH":
+            return Response({'message': 'passport field is required.'}, status=status.HTTP_400_BAD_REQUEST)
 
         user = User.objects.get(id=id)
         user.passport_url.delete()
-        if request.method is "PATCH":
+        if request.method == "PATCH":
             user.passport_url = passport
             user.save()
-            return Response({'message': 'Passport Updated successfully'}, status=status.HTTP_200_OK)
+            return Response({'message': 'Passport updated successfully.'}, status=status.HTTP_200_OK)
         user.save()
-        return Response({'message': 'Passport deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+        return Response({'message': 'Passport deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
 
     def update(self, request, id=None, *args, **kwargs):
         """It updates user details
@@ -91,7 +87,7 @@ class UserDetailViewSet(viewsets.GenericViewSet,
         :param kwargs
         :return: response message or data
         """
-        validated_user_data = UserSerializer(data=request.data)
+        validated_user_data = UserUpdateSerializer(data=request.data)
         return handle_validate_and_update_user(request, validated_user_data, id)
 
     def partial_update(self, request, id=None, *args, **kwargs):
