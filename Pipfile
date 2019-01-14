@@ -24,6 +24,7 @@ django-smtp-ssl = "*"
 gunicorn = "*"
 coverage = "*"
 django-override-storage = "*"
+coveralls = "*"
 
 [requires]
 python_version = "3.7"
