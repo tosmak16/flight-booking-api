@@ -1,8 +1,9 @@
-from rest_framework import viewsets, status, mixins
+from rest_framework import viewsets, status, mixins, serializers
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
 from datetime import datetime
+from django.contrib.auth.hashers import make_password
 
 from .serializers import UserSerializer, UserUpdateSerializer
 from .models import User
@@ -106,7 +107,7 @@ class UserDetailViewSet(viewsets.GenericViewSet,
     @action(methods=['POST'], detail=False)
     def password(self, request):
         """
-        It handles new user creation
+        It handles password reset
         :param request:
         :return:  success message or error message
         """
@@ -120,4 +121,28 @@ class UserDetailViewSet(viewsets.GenericViewSet,
         user.save()
         BackgroundTaskWorker.start_work(send_password_reset_email, (user, new_password))
         return Response({'message': 'Password reset successful.'}, status=status.HTTP_200_OK)
+
+    @action(methods=['PATCH'], detail=True)
+    def change_password(self, request, id=None, *args, **kwargs):
+        """
+        It handles user password update
+        :param request: user data
+        :param id: user id
+        :param args:
+        :param kwargs:
+        :return:  success message or error message
+        """
+        password = request.data.get('password', '')
+        old_password = request.data.get('old_password', '')
+        if old_password == password:
+            return Response({'message': 'Current password and new password can not be the same.'},
+                            status=status.HTTP_400_BAD_REQUEST)
+        try:
+            UserSerializer.validate_password(password)
+        except serializers.ValidationError as error:
+            return Response({'message': error.detail[0]}, status=status.HTTP_400_BAD_REQUEST)
+        user = User.objects.get(id=id)
+        user.password = make_password(password)
+        user.save()
+        return Response({'message': 'Password updated successfully.'}, status=status.HTTP_200_OK)
 
