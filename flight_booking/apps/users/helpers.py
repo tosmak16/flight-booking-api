@@ -5,10 +5,12 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import exceptions
 from random import randint, choice
+from django.core.mail import EmailMessage
 
 from .models import User
 from .serializers import UserSerializer
 from .auth import VerifyToken
+from flight_booking.config.settings import DEFAULT_FROM_EMAIL
 
 
 def handle_validate_and_update_user(request, validated_user_data, id=None):
@@ -66,3 +68,14 @@ def generate_random_pass_key():
     rand_small_letter = choice('abcdefghij')
     rand_cap_letter = choice('AFBHRQ')
     return rand_number+rand_cap_letter+rand_char+rand_small_letter
+
+
+async def send_password_reset_email(user, new_password):
+    messenger = EmailMessage(
+        f"Password Reset",
+        f'Hello {user.first_name}, password has been reset successfully.'
+        f'Kindly login with this Password {new_password}',
+        DEFAULT_FROM_EMAIL,
+        to=(user.email,))
+    return messenger.send()
+
