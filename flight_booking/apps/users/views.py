@@ -3,12 +3,14 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
 from datetime import datetime
+from django.core.mail import EmailMessage
 
 from .serializers import UserSerializer, UserUpdateSerializer
 from .models import User
 from .permissions import PatchAdminAndUserPermissions, PutAdminAndUserPermissions, GetAdminAndUserPermissions
 from ...config.settings import TOKEN_EXP
-from .helpers import handle_validate_and_update_user, generate_token
+from .helpers import handle_validate_and_update_user, generate_token, generate_random_pass_key
+from flight_booking.config.settings import DEFAULT_FROM_EMAIL
 
 
 class UserDetailViewSet(viewsets.GenericViewSet,
@@ -101,4 +103,28 @@ class UserDetailViewSet(viewsets.GenericViewSet,
         """
         validated_user_data = UserSerializer(data=request.data, partial=True)
         return handle_validate_and_update_user(request, validated_user_data, id)
+
+    @action(methods=['POST'], detail=False)
+    def password(self, request):
+        """
+        It handles new user creation
+        :param request:
+        :return:  success message or error message
+        """
+        email = request.data.get('email')
+        new_password = generate_random_pass_key()
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response({'message': 'Account does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+        messenger = EmailMessage(
+            f"Password Reset",
+            f'Hello {user.first_name} password has been reset successfully.'
+            f'Kindly login with this Password {new_password}',
+            DEFAULT_FROM_EMAIL,
+            to=(email,))
+        user.set_password(new_password)
+        user.save()
+        messenger.send()
+        return Response({'message': 'Password reset successful.'}, status=status.HTTP_200_OK)
 
