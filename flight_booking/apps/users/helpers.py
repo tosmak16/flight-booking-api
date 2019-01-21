@@ -4,6 +4,7 @@ import os
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import exceptions
+from random import randint, choice
 
 from .models import User
 from .serializers import UserSerializer
@@ -53,3 +54,15 @@ def generate_token(email, token_expire_date):
                         'exp': token_expire_date},
                        os.getenv('APP_SECRET_KEY'), algorithm='HS256')
     return token
+
+
+def generate_random_pass_key():
+    """
+    It generates random pass key
+    :return: randomly generated values
+    """
+    rand_number = f'{randint(1, 9999999999)}'
+    rand_char = choice('@#&*$%')
+    rand_small_letter = choice('abcdefghij')
+    rand_cap_letter = choice('AFBHRQ')
+    return rand_number+rand_cap_letter+rand_char+rand_small_letter
