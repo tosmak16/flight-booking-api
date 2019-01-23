@@ -25,6 +25,7 @@ gunicorn = "*"
 coverage = "*"
 django-override-storage = "*"
 coveralls = "*"
+locustio = "*"
 
 [requires]
 python_version = "3.7"
