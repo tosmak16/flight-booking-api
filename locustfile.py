@@ -7,12 +7,11 @@ signin_url = 'http://0.0.0.0:8000/api/v1/users/signin/'
 
 def signup(self):
     x = self.client.post(signup_url, {
-        "email": 'tosmahzzky6{0}{1}@gmail.com'.format(randint(1, 100), randint(0, 999)),
+        "email": 'tosmahzzky6{0}{1}@gmail.com'.format(randint(1, 1000), randint(0, 9999)),
         "password": "1717086207H#aAAaaz@@12",
         "first_name": "qq",
         "last_name": "aa"
     })
-    print(x.content)
 
 
 def login(self):
